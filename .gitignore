@@ -53,3 +53,7 @@ dkms.conf
 
 # compressed package
 *.zip
+
+#linux
+*.swp
+
