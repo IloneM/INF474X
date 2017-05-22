@@ -45,14 +45,13 @@ int main(int argc, char* argv[]) {
 
 	struct sockaddr_in to = {0};
 
-//	to.sin_addr = *(struct in_addr *) ip;
 	to.sin_port = htons(port);
 	to.sin_family = AF_INET;
 	inet_aton(ip, &to.sin_addr);
 
 	while(1) {
-		//rand_str(buffer, rand()%BUFFER_SIZE);
-		rand_str(buffer, 100);
+		rand_str(buffer, rand()%BUFFER_SIZE);
+//		rand_str(buffer, 100);
 
 		puts(buffer);
 
@@ -75,7 +74,7 @@ int main(int argc, char* argv[]) {
 		buffer_rcv[n] = '\0';
 		puts(buffer_rcv);
 
-		usleep(1000000);
+		usleep(100000);
 	}
 }
 

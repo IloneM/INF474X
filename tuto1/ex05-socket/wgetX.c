@@ -5,6 +5,10 @@
  * jiazi.yi@polytechnique.edu
  */
 
+/*
+ * DISCLAMER: Part of this file use the solution
+ */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -18,25 +22,6 @@
 #include "url.h"
 #include "wgetX.h"
 
-/*
-	#define MAXRCVLEN 500
-   char buffer[MAXRCVLEN + 1];
-   int len, mysocket;
-   struct sockaddr_in dest;
-
-   mysocket = socket(AF_INET, SOCK_STREAM, 0);
-   memset(&dest, 0, sizeof(dest));
-   dest.sin_family = AF_INET;
-   dest.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
-   dest.sin_port = htons(5000);
-   connect(mysocket, (struct sockaddr *)&dest, sizeof(struct sockaddr));
-
-   len = recv(mysocket, buffer, MAXRCVLEN, 0);
-   buffer[len] = '\0';
-   printf("Received %s (%d bytes).\n", buffer, len);
-   close(mysocket);
-   return 0;
-*/
 char *build_get_query(char *host, char *page);
 
 int main(int argc, char* argv[])
@@ -84,8 +69,6 @@ char* download_page(url_info info, char *recv_buf_t)
    dest.sin_family = AF_INET;
    dest.sin_port = htons(info.port);
    dest.sin_addr = *(struct in_addr *) gethostbyname(info.host)->h_addr;
-//   dest.sin_addr.s_addr = inet_addr(gethostbyname(info.host)->h_addr);
-//   dest.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
    connect(mysocket, (struct sockaddr *)&dest, sizeof(struct sockaddr));
 	
 	char* get = build_get_query(info.host, info.path);
@@ -114,21 +97,15 @@ char* download_page(url_info info, char *recv_buf_t)
 		if (bytes == 0) { //reading finished
 			break;
 		}
-
-		//		sprintf(recv_buf + strlen(recv_buf), "%s",temp_recv_buf); //work code
-
 		memcpy(recv_buf_t+strlen(recv_buf_t), temp_recv_buf, strlen(temp_recv_buf)); //copy the temp buffer to the "big" buffer
 	}
 	free(temp_recv_buf);
-
-	//	puts(recv_buf);
 
 	// now begin parsing the http reply
 
 	//first line, get the status code
 	char *status_line = strstr(recv_buf_t, "\r\n");
 	*status_line = '\0';
-	//		puts(recv_buf_t);
 	char status[4];
 	memcpy(status, recv_buf_t + 9, 3); //get the status string
 	status[3] = '\0';
@@ -150,10 +127,6 @@ char* download_page(url_info info, char *recv_buf_t)
 		break;
 
 	}
-//	close(socketfd);
-//   len = recv(mysocket, recv_buf_t, B_SIZE, 0);
-//   recv_buf_t[len] = '\0';
-//   printf("Received %s (%d bytes).\n", recv_buf_t, len);
    close(mysocket);
 
 	return recv_buf_t;

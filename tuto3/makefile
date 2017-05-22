@@ -78,6 +78,6 @@ client : client.o
 # (in this case, by the Pattern Rule above).
 # Dependency Rules are often used to capture header file dependencies.
 
-host.o : host.c
+host.o : host.c stack.h
 client.o : client.c
  

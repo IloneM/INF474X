@@ -8,8 +8,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "url.h"
-
 #define BUFFER_SIZE 1025
 
 typedef struct sockaddr_in sockaddr_in;
@@ -20,7 +18,7 @@ int main(int argc, char* argv[]) {
 	char buffer[BUFFER_SIZE];
 
 	if (argc != 3) {
-		perror("The wgetX must have exactly 1 parameter as input. \n");
+		perror("The udp client must have exactly 2 parameter as input: ip, port\n");
 		exit(EXIT_FAILURE);
 	}
 	char *ip = argv[1];

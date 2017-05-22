@@ -16,7 +16,7 @@ typedef struct in_addr in_addr;
 
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
-		perror("Host must have exactly 1 parameter as input: port\n");
+		perror("The wgetX must have exactly 1 parameter as input. \n");
 		exit(EXIT_FAILURE);
 	}
 
@@ -41,21 +41,24 @@ int main(int argc, char* argv[]) {
 
 	int n;
 	sockaddr_in from = { 0 };
-	socklen_t fromsize = sizeof from;
+	int fromsize = sizeof from;
 	char buffer[BUFFER_SIZE];
 
-	if((n = recvfrom(sock, buffer, sizeof(buffer) - 1, 0, (sockaddr *)&from, &fromsize)) < 0)
-	{
-		perror("recvfrom()");
-		exit(EXIT_FAILURE);
-	}
+	while(1) {
+		if((n = recvfrom(sock, buffer, sizeof(buffer) - 1, 0, (sockaddr *)&from, &fromsize)) < 0)
+		{
+			perror("recvfrom()");
+			exit(EXIT_FAILURE);
+		}
 
-	buffer[n] = '\0';
+		printf("%d", next_info->sender->sin_addr.s_addr);
+		buffer[n] = '\0';
 
-	if(sendto(sock, buffer, strlen(buffer), 0, (sockaddr *)&from, fromsize) < 0)
-	{
-		perror("sendto()");
-		exit(EXIT_FAILURE);
+		if(sendto(sock, buffer, strlen(buffer), 0, (sockaddr *)&from, fromsize) < 0)
+		{
+			perror("sendto()");
+			exit(EXIT_FAILURE);
+		}
 	}
 
 	return EXIT_SUCCESS;
